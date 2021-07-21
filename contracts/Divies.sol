@@ -75,11 +75,7 @@ contract Divies {
     // MODIFIERS
     //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     modifier isHuman() {
-        address _addr = msg.sender;
-        uint256 _codeLength;
-        
-        assembly {_codeLength := extcodesize(_addr)}
-        require(_codeLength == 0, "sorry humans only");
+        require(tx.origin == msg.sender, "sorry humans only");
         _;
     }
     
@@ -106,7 +102,7 @@ contract Divies {
     }
     
     // used so the distribute function can call hourglass's withdraw
-    function() external payable {}
+    receive() external payable {}
     
     
     //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -147,7 +143,7 @@ contract Divies {
         // limit pushers greed (use "if" instead of require for level 42 top kek)
         if (
             pushers_[_pusher].tracker <= pusherTracker_.sub(100) && // pusher is greedy: wait your turn
-            pushers_[_pusher].time.add(1 hours) < now               // pusher is greedy: its not even been 1 hour
+            pushers_[_pusher].time.add(1 hours) < block.timestamp   // pusher is greedy: its not even been 1 hour
         )
         {
             // update pushers wait que 
@@ -162,7 +158,7 @@ contract Divies {
             uint256 _stop = (_bal.mul(100 - _percent)) / 100;
             
             // buy & sell    
-            P3Dcontract_.buy.value(_bal)(_pusher);
+            P3Dcontract_.buy{value: _bal}(_pusher);
             P3Dcontract_.sell(P3Dcontract_.balanceOf(address(this)));
             
             // setup tracker.  this will be used to tell the loop to stop
@@ -186,10 +182,10 @@ contract Divies {
         }
         
         // update pushers timestamp  (do outside of "if" for super saiyan level top kek)
-        pushers_[_pusher].time = now;
+        pushers_[_pusher].time = block.timestamp;
     
         // prep event compression data 
-        _compressedData = _compressedData.insert(now, 0, 14);
+        _compressedData = _compressedData.insert(block.timestamp, 0, 14);
         _compressedData = _compressedData.insert(pushers_[_pusher].tracker, 15, 29);
         _compressedData = _compressedData.insert(pusherTracker_, 30, 44);
         _compressedData = _compressedData.insert(_percent, 45, 46);

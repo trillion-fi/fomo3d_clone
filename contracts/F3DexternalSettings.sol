@@ -8,18 +8,10 @@ contract F3DexternalSettings {
 
     
     constructor() 
-        public
     {
         //constructor does nothing.
     }
     
-    function()
-        public
-        payable
-    {
-        revert(); 
-    }
-
     function getFastGap() external view returns(uint256){
         return 2 minutes;
     }

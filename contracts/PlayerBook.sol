@@ -56,7 +56,7 @@ contract PlayerBook {
 //     _| _ _|_ _    _ _ _|_    _   .
 //    (_|(_| | (_|  _\(/_ | |_||_)  .
 //=============================|================================================    
-    uint256 public registrationFee_ = 10 finney;            // price to register a name
+    uint256 public registrationFee_ = 0.01 ether;            // price to register a name
     mapping(uint256 => PlayerBookReceiverInterface) public games_;  // mapping of our game interfaces for sending your account info to games
     mapping(address => bytes32) public gameNames_;          // lookup a games name
     mapping(address => uint256) public gameIDs_;            // lokup a games ID
@@ -78,7 +78,6 @@ contract PlayerBook {
 //    (_(_)| |_\ | | |_|(_ | (_)|   .  (initial data setup upon contract deploy)
 //==============================================================================    
     constructor()
-        public
     {
         // premine the dev names (sorry not sorry)
             // No keys are purchased with this method, it's simply locking our addresses,
@@ -125,11 +124,7 @@ contract PlayerBook {
      * @dev prevents contracts from interacting with fomo3d 
      */
     modifier isHuman() {
-        address _addr = msg.sender;
-        uint256 _codeLength;
-        
-        assembly {_codeLength := extcodesize(_addr)}
-        require(_codeLength == 0, "sorry humans only");
+        require(tx.origin == msg.sender, "sorry humans only");
         _;
     }
     
@@ -165,7 +160,7 @@ contract PlayerBook {
 //     _  _ _|__|_ _  _ _  .
 //    (_|(/_ |  | (/_| _\  . (for UI & viewing things on etherscan)
 //=====_|=======================================================================
-    function checkIfNameValid(string _nameStr)
+    function checkIfNameValid(string memory _nameStr)
         public
         view
         returns(bool)
@@ -202,7 +197,7 @@ contract PlayerBook {
      * @param _all set to true if you want this to push your info to all games 
      * (this might cost a lot of gas)
      */
-    function registerNameXID(string _nameString, uint256 _affCode, bool _all)
+    function registerNameXID(string memory _nameString, uint256 _affCode, bool _all)
         isHuman()
         public
         payable 
@@ -237,7 +232,7 @@ contract PlayerBook {
         registerNameCore(_pID, _addr, _affCode, _name, _isNewPlayer, _all);
     }
     
-    function registerNameXaddr(string _nameString, address _affCode, bool _all)
+    function registerNameXaddr(string memory _nameString, address _affCode, bool _all)
         isHuman()
         public
         payable 
@@ -277,7 +272,7 @@ contract PlayerBook {
         registerNameCore(_pID, _addr, _affID, _name, _isNewPlayer, _all);
     }
     
-    function registerNameXname(string _nameString, bytes32 _affCode, bool _all)
+    function registerNameXname(string memory _nameString, bytes32 _affCode, bool _all)
         isHuman()
         public
         payable 
@@ -375,7 +370,7 @@ contract PlayerBook {
      * -functionhash- 0xb9291296
      * @param _nameString the name you want to use 
      */
-    function useMyOldName(string _nameString)
+    function useMyOldName(string memory _nameString)
         isHuman()
         public 
     {
@@ -412,7 +407,7 @@ contract PlayerBook {
         }
         
         // registration fee goes directly to community rewards
-        Jekyll_Island_Inc.deposit.value(address(this).balance)();
+        Jekyll_Island_Inc.deposit{value:address(this).balance}();
         
         // push player info to games
         if (_all == true)
@@ -420,7 +415,7 @@ contract PlayerBook {
                 games_[i].receivePlayerInfo(_pID, _addr, _name, _affID);
         
         // fire event
-        emit onNewName(_pID, _addr, _name, _isNewPlayer, _affID, plyr_[_affID].addr, plyr_[_affID].name, msg.value, now);
+        emit onNewName(_pID, _addr, _name, _isNewPlayer, _affID, plyr_[_affID].addr, plyr_[_affID].name, msg.value, block.timestamp);
     }
 //==============================================================================
 //    _|_ _  _ | _  .
@@ -591,7 +586,7 @@ contract PlayerBook {
 //   _ _ _|_    _   .
 //  _\(/_ | |_||_)  .
 //=============|================================================================
-    function addGame(address _gameAddress, string _gameNameStr)
+    function addGame(address _gameAddress, string memory _gameNameStr)
         onlyDevs()
         public
     {

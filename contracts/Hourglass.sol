@@ -68,7 +68,7 @@ contract Hourglass {
     // -> change the price of tokens
     modifier onlyAdministrator(){
         address _customerAddress = msg.sender;
-        require(administrators[keccak256(_customerAddress)]);
+        require(administrators[keccak256(abi.encodePacked(_customerAddress))]);
         _;
     }
     
@@ -186,8 +186,7 @@ contract Hourglass {
     /*
     * -- APPLICATION ENTRY POINTS --  
     */
-    function Hourglass()
-        public
+    constructor()
     {
         // add administrators here
         administrators[0xdd8bb99b13fe33e1c32254dfb8fff3e71193f6b730a89dd33bfe5dedc6d83002] = true;
@@ -264,11 +263,9 @@ contract Hourglass {
      * Fallback function to handle ethereum that was send straight to the contract
      * Unfortunately we cannot use a referral address this way.
      */
-    function()
-        payable
-        public
+    receive() external payable
     {
-        purchaseTokens(msg.value, 0x0);
+        purchaseTokens(msg.value, address(0x0));
     }
     
     /**
@@ -290,10 +287,10 @@ contract Hourglass {
         referralBalance_[_customerAddress] = 0;
         
         // dispatch a buy order with the virtualized "withdrawn dividends"
-        uint256 _tokens = purchaseTokens(_dividends, 0x0);
+        uint256 _tokens = purchaseTokens(_dividends, address(0x0));
         
         // fire event
-        onReinvestment(_customerAddress, _dividends, _tokens);
+        emit onReinvestment(_customerAddress, _dividends, _tokens);
     }
     
     /**
@@ -319,7 +316,7 @@ contract Hourglass {
         public
     {
         // setup data
-        address _customerAddress = msg.sender;
+        address payable _customerAddress = payable(msg.sender);
         uint256 _dividends = myDividends(false); // get ref. bonus later in the code
         
         // update dividend tracker
@@ -333,7 +330,7 @@ contract Hourglass {
         _customerAddress.transfer(_dividends);
         
         // fire event
-        onWithdraw(_customerAddress, _dividends);
+        emit onWithdraw(_customerAddress, _dividends);
     }
     
     /**
@@ -367,7 +364,7 @@ contract Hourglass {
         }
         
         // fire event
-        onTokenSell(_customerAddress, _tokens, _taxedEthereum);
+        emit onTokenSell(_customerAddress, _tokens, _taxedEthereum);
     }
     
     
@@ -412,7 +409,7 @@ contract Hourglass {
         profitPerShare_ = SafeMath.add(profitPerShare_, (_dividends * magnitude) / tokenSupply_);
         
         // fire event
-        Transfer(_customerAddress, _toAddress, _taxedTokens);
+        emit Transfer(_customerAddress, _toAddress, _taxedTokens);
         
         // ERC20
         return true;
@@ -453,7 +450,7 @@ contract Hourglass {
     /**
      * If we want to rebrand, we can.
      */
-    function setName(string _name)
+    function setName(string memory _name)
         onlyAdministrator()
         public
     {
@@ -463,7 +460,7 @@ contract Hourglass {
     /**
      * If we want to rebrand, we can.
      */
-    function setSymbol(string _symbol)
+    function setSymbol(string memory _symbol)
         onlyAdministrator()
         public
     {
@@ -481,7 +478,7 @@ contract Hourglass {
         view
         returns(uint)
     {
-        return this.balance;
+        return address(this).balance;
     }
     
     /**
@@ -683,7 +680,7 @@ contract Hourglass {
         payoutsTo_[_customerAddress] += _updatedPayouts;
         
         // fire event
-        onTokenPurchase(_customerAddress, _incomingEthereum, _amountOfTokens, _referredBy);
+        emit onTokenPurchase(_customerAddress, _incomingEthereum, _amountOfTokens, _referredBy);
         
         return _amountOfTokens;
     }

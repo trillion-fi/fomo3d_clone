@@ -37,7 +37,7 @@ library NameFilter {
      * -restricts characters to A-Z, a-z, 0-9, and space.
      * @return reprocessed string in bytes32 format
      */
-    function nameFilter(string _input)
+    function nameFilter(string memory _input)
         internal
         pure
         returns(bytes32)
@@ -66,7 +66,7 @@ library NameFilter {
             if (_temp[i] > 0x40 && _temp[i] < 0x5b)
             {
                 // convert to lower case a-z
-                _temp[i] = byte(uint(_temp[i]) + 32);
+                _temp[i] = bytes1(uint8(_temp[i]) + 32);
                 
                 // we have a non number
                 if (_hasNonNumber == false)

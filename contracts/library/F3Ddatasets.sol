@@ -38,7 +38,7 @@ library F3Ddatasets {
         uint256 potAmount;          // amount added to pot
     }
     struct Player {
-        address addr;   // player address
+        address payable addr;   // player address
         bytes32 name;   // player name
         uint256 win;    // winnings vault
         uint256 gen;    // general vault

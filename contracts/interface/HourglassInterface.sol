@@ -3,7 +3,6 @@ pragma solidity ^0.8.0;
 
 
 interface HourglassInterface {
-    function() payable external;
     function buy(address _playerAddress) payable external returns(uint256);
     function sell(uint256 _amountOfTokens) external;
     function reinvest() external;

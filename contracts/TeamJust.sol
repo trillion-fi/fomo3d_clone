@@ -48,7 +48,7 @@ pragma solidity ^0.8.0;
  *                                └────────────────────┘
  * (Step 1) import this contracts interface into your contract
  * 
- *    import "./TeamJustInterface.sol";
+ *    Import "./TeamJustInterface.sol";
  *
  * (Step 2) set up the interface to point to the TeamJust contract
  * 
@@ -85,7 +85,7 @@ import "./interface/PlayerBookReceiverInterface.sol";
 
 
 contract TeamJust {
-    JIincForwarderInterface private Jekyll_Island_Inc = JIincForwarderInterface(0x0);
+    JIincForwarderInterface private Jekyll_Island_Inc = JIincForwarderInterface(address(0x0));
     //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     // SET UP MSFun (note, check signers by name is modified from MSFun sdk)
     //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -113,7 +113,6 @@ contract TeamJust {
     // CONSTRUCTOR
     //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     constructor()
-        public
     {
         address inventor = 0x18E90Fc6F70344f53EBd4f6070bf6Aa23e2D748C;
         address mantso   = 0x8b4DA1827932D71759687f925D17F81Fc94e3A9D;
@@ -138,11 +137,9 @@ contract TeamJust {
     // there should never be a balance in this contract.  but if someone
     // does stupidly send eth here for some reason.  we can forward it 
     // to jekyll island
-    function ()
-        public
-        payable
+    receive() external payable
     {
-        Jekyll_Island_Inc.deposit.value(address(this).balance)();
+        Jekyll_Island_Inc.deposit{value:address(this).balance}();
     }
     
     function setup(address _addr)

@@ -35,11 +35,11 @@ pragma solidity ^0.8.0;
  *                                │ Setup Instructions │
  *                                └────────────────────┘
  * (Step 1) import the Jekyll Island Inc Forwarder Interface into your contract
- * 
- *    import "./JIincForwarderInterface.sol";
+ *
+ *    Import "./JIincForwarderInterface.sol";
  *
  * (Step 2) set it to point to the forwarder
- * 
+ *
  *    JIincForwarderInterface private Jekyll_Island_Inc = JIincForwarderInterface(0xdd4950F977EE28D2C132f1353D1595035Db444EE);
  *                                ┌────────────────────┐
  *                                │ Usage Instructions │
@@ -70,18 +70,15 @@ contract JIincForwarder {
     bool needsBank_ = true;
     
     constructor() 
-        public
     {
         //constructor does nothing.
     }
     
-    function()
-        public
-        payable
+    receive() external payable
     {
         // done so that if any one tries to dump eth into this contract, we can
         // just forward it to corp bank.
-        currentCorpBank_.deposit.value(address(this).balance)(address(currentCorpBank_));
+        currentCorpBank_.deposit{value:address(this).balance}(address(currentCorpBank_));
     }
     
     function deposit()
@@ -91,7 +88,7 @@ contract JIincForwarder {
     {
         require(msg.value > 0, "Forwarder Deposit failed - zero deposits not allowed");
         require(needsBank_ == false, "Forwarder Deposit failed - no registered bank");
-        if (currentCorpBank_.deposit.value(msg.value)(msg.sender) == true)
+        if (currentCorpBank_.deposit{value:msg.value}(msg.sender) == true)
             return(true);
         else
             return(false);
