@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.8.0;
 /*
  * -PlayerBook - v0.3.14
  * ┌┬┐┌─┐┌─┐┌┬┐   ╦╦ ╦╔═╗╔╦╗  ┌─┐┬─┐┌─┐┌─┐┌─┐┌┐┌┌┬┐┌─┐

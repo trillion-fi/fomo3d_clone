@@ -1,3 +1,9 @@
 build/*
 node_modules/*
-test/*
+
+#Hardhat files
+cache
+artifacts
+
+#Intellij
+.idea

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.8.0;
 
 interface JIincInterfaceForForwarder {
     function deposit(address _addr) external payable returns (bool);
