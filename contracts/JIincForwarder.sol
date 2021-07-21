@@ -1,4 +1,6 @@
+//SPDX-License-Identifier: WTFPL
 pragma solidity ^0.8.0;
+
 /*
  * @title -Jekyll Island- CORP BANK FORWARDER v0.4.6
  * ┌┬┐┌─┐┌─┐┌┬┐   ╦╦ ╦╔═╗╔╦╗  ┌─┐┬─┐┌─┐┌─┐┌─┐┌┐┌┌┬┐┌─┐

@@ -1,4 +1,6 @@
+//SPDX-License-Identifier: WTFPL
 pragma solidity ^0.8.0;
+
 
 interface F3DexternalSettingsInterface {
     function getFastGap() external returns(uint256);

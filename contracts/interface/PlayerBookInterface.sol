@@ -1,4 +1,6 @@
+//SPDX-License-Identifier: WTFPL
 pragma solidity ^0.8.0;
+
 
 interface PlayerBookInterface {
     function getPlayerID(address _addr) external returns (uint256);
