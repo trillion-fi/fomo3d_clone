@@ -167,11 +167,7 @@ contract FoMo3Dlong is modularLong {
      * @dev prevents contracts from interacting with fomo3d 
      */
     modifier isHuman() {
-        address _addr = msg.sender;
-        uint256 _codeLength;
-        
-        assembly {_codeLength := extcodesize(_addr)}
-        require(_codeLength == 0, "sorry humans only");
+        require(tx.origin == msg.sender, "sorry humans only");
         _;
     }
 
@@ -181,7 +177,7 @@ contract FoMo3Dlong is modularLong {
     modifier isWithinLimits(uint256 _eth) {
         require(_eth >= 1000000000, "pocket lint: not a valid currency");
         require(_eth <= 100000000000000000000000, "no vitalik, no");
-        _;    
+        _;
     }
     
 //==============================================================================
