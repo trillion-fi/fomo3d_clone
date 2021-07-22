@@ -256,7 +256,7 @@ contract Hourglass {
         payable
         returns(uint256)
     {
-        purchaseTokens(msg.value, _referredBy);
+        return purchaseTokens(msg.value, _referredBy);
     }
     
     /**

@@ -12,19 +12,19 @@ contract F3DexternalSettings {
         //constructor does nothing.
     }
     
-    function getFastGap() external view returns(uint256){
+    function getFastGap() external pure returns(uint256){
         return 2 minutes;
     }
 
-    function getLongGap() external view returns(uint256){
+    function getLongGap() external pure returns(uint256){
         return 2 minutes;
     }
 
-    function getFastExtra() external view returns(uint256){
+    function getFastExtra() external pure returns(uint256){
         return 10 minutes;
     }
 
-    function getLongExtra() external view returns(uint256){
+    function getLongExtra() external pure returns(uint256){
         return 10 minutes;
     }
 
